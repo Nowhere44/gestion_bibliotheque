@@ -1,0 +1,58 @@
+easy_admin:
+  entities:
+    User:
+      class: App\Entity\User
+      list:
+        fields: ["id", "username", "email", "roles"]
+      form:
+        fields:
+          - { property: "username" }
+          - { property: "email" }
+          - { property: "password", type: "password" }
+          - {
+              property: "bibliotheque",
+              type: "entity",
+              type_options: { class: 'App\Entity\Bibliotheque' },
+            }
+          - {
+              property: "roles",
+              type: "choice",
+              type_options:
+                {
+                  multiple: true,
+                  choices:
+                    {
+                      "Admin": "ROLE_ADMIN",
+                      "Bibliothécaire": "ROLE_LIBRARIAN",
+                      "Client": "ROLE_CLIENT",
+                    },
+                },
+            }
+      # Ajoutez d'autres entités comme Bibliotheque et Livre ici
+      Bibliotheque:
+        class: App\Entity\Bibliotheque
+        list:
+          fields: ["id", "name", "description", "livres"] # Assurez-vous que ces champs existent dans votre entité Bibliotheque
+        form:
+          fields:
+            - { property: "name" }
+            - { property: "description" }
+            - {
+                property: "livres",
+                type: "entity",
+                type_options: { class: 'App\Entity\Livre', multiple: true },
+              }
+
+      Livre:
+        class: App\Entity\Livre
+        list:
+          fields: ["id", "titre", "auteur", "bibliotheque"] # Assurez-vous que ces champs existent dans votre entité Livre
+        form:
+          fields:
+            - { property: "titre" }
+            - { property: "auteur" }
+            - {
+                property: "bibliotheque",
+                type: "entity",
+                type_options: { class: 'App\Entity\Bibliotheque' },
+              }

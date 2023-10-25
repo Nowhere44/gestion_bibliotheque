@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ bibliotheque.name }}{% endblock %}
+
+{% block body %}
+    <h1>{{ bibliotheque.name }}</h1>
+
+    <h2>Livres associés:</h2>
+    <ul>
+        {% for livre in bibliotheque.livres %}
+        <li>
+            {{ livre.title }} par {{ livre.author }}
+            {% if is_granted('ROLE_CLIENT') and not is_granted('ROLE_ADMIN') and not is_granted('ROLE_LIBRARIAN') %}
+                <a href="{{ path('emprunter_livre', {'id': livre.id}) }}">Emprunter</a>
+            {% endif %}
+
+            {% if app.flashes('success') %}
+    <script>
+        alert('Livre emprunté avec succès ! Veuillez vérifier votre email.');
+    </script>
+{% endif %}
+        </li>
+    {% else %}
+        <li>Aucun livre associé à cette bibliothèque.</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

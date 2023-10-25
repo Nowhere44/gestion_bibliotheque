@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\BibliothequeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BibliothequeRepository::class)]
@@ -21,6 +23,20 @@ class Bibliotheque
 
     #[ORM\Column(length: 255)]
     private ?string $image = null;
+
+    #[ORM\OneToMany(mappedBy: 'bibliotheque', targetEntity: Livre::class)]
+    private Collection $livres;
+
+    
+    
+    #[ORM\OneToMany(mappedBy: 'bibliotheque', targetEntity: User::class)]
+    private Collection $bibliothecaires;
+
+    public function __construct()
+    {
+        $this->livres = new ArrayCollection();
+        $this->bibliothecaires = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -66,6 +82,68 @@ class Bibliotheque
     public function setImage(string $image): static
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Livre>
+     */
+    public function getLivres(): Collection
+    {
+        return $this->livres;
+    }
+
+    public function addLivre(Livre $livre): static
+    {
+        if (!$this->livres->contains($livre)) {
+            $this->livres->add($livre);
+            $livre->setBibliotheque($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLivre(Livre $livre): static
+    {
+        if ($this->livres->removeElement($livre)) {
+            if ($livre->getBibliotheque() === $this) {
+                $livre->setBibliotheque(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function __toString(): string
+{
+    return $this->name;
+}
+   /**
+     * @return Collection<int, User>
+     */
+    public function getBibliothecaires(): Collection
+    {
+        return $this->bibliothecaires;
+    }
+
+    public function addBibliothecaire(User $bibliothecaire): self
+    {
+        if (!$this->bibliothecaires->contains($bibliothecaire)) {
+            $this->bibliothecaires[] = $bibliothecaire;
+            $bibliothecaire->setBibliotheque($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBibliothecaire(User $bibliothecaire): self
+    {
+        if ($this->bibliothecaires->removeElement($bibliothecaire)) {
+            if ($bibliothecaire->getBibliotheque() === $this) {
+                $bibliothecaire->setBibliotheque(null);
+            }
+        }
 
         return $this;
     }

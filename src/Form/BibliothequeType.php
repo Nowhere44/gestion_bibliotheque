@@ -1,27 +1,27 @@
 <?php
 
 namespace App\Form;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use App\Entity\Livre;
+
+use App\Entity\Bibliotheque;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use App\Entity\Bibliotheque;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\Livre;
 
-
-class LivreType extends AbstractType
+class BibliothequeType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('title')
-            ->add('author')
-            ->add('publishedDate')
+            ->add('name')
             ->add('description')
             ->add('image')
-            ->add('bibliotheque', EntityType::class, [
-                'class' => Bibliotheque::class,
-                'choice_label' => 'name',  // supposant que votre entité Bibliotheque a une propriété 'nom'
+            ->add('livres', EntityType::class, [
+                'class' => Livre::class,
+                'choice_label' => 'title',
+                'multiple' => true,
+                'expanded' => true,
             ]);
         ;
     }
@@ -29,7 +29,7 @@ class LivreType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Livre::class,
+            'data_class' => Bibliotheque::class,
         ]);
     }
 }

@@ -1,0 +1,14 @@
+<h1>Résultats de recherche pour "{{ query }}"</h1>
+
+<ul>
+    {% for livre in livres %}
+        <li>
+            {{ livre.title }} par {{ livre.author }}
+            {% if livre.bibliotheque %}
+                (Disponible à {{ livre.bibliotheque.name }})
+            {% endif %}
+        </li>
+    {% else %}
+        <li>Aucun livre trouvé.</li>
+    {% endfor %}
+</ul>

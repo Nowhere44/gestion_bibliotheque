@@ -3,12 +3,16 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-class User
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -30,10 +34,22 @@ class User
     #[ORM\Column(length: 255)]
     private ?string $profileImage = null;
 
+    
+    #[ORM\ManyToOne(targetEntity: Bibliotheque::class ,inversedBy: 'bibliothecaires')]
+    private ?Bibliotheque $bibliotheque = null;
+
+    #[ORM\OneToMany(mappedBy: 'borrower', targetEntity: Emprunt::class)]
+    private Collection $livre;
+
+    public function __construct()
+    {
+        $this->livre = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
-    }
+    }   
 
     public function setId(int $id): static
     {
@@ -98,6 +114,63 @@ class User
     public function setProfileImage(string $profileImage): static
     {
         $this->profileImage = $profileImage;
+
+        return $this;
+    }
+
+    public function getSalt()
+    {
+    
+        return null;
+    }
+
+    public function eraseCredentials()
+    {
+    
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->username; 
+    }
+
+    public function getBibliotheque(): ?Bibliotheque
+    {
+        return $this->bibliotheque;
+    }
+
+    public function setBibliotheque(?Bibliotheque $bibliotheque): self
+    {
+        $this->bibliotheque = $bibliotheque;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Emprunt>
+     */
+    public function getLivre(): Collection
+    {
+        return $this->livre;
+    }
+
+    public function addLivre(Emprunt $livre): static
+    {
+        if (!$this->livre->contains($livre)) {
+            $this->livre->add($livre);
+            $livre->setBorrower($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLivre(Emprunt $livre): static
+    {
+        if ($this->livre->removeElement($livre)) {
+            // set the owning side to null (unless already changed)
+            if ($livre->getBorrower() === $this) {
+                $livre->setBorrower(null);
+            }
+        }
 
         return $this;
     }

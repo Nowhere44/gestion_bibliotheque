@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des bibliothèques{% endblock %}
+
+{% block body %}
+
+{% if is_granted('ROLE_LIBRARIAN') %}
+    <h1>Ta bibliotheque</h1>
+{% else %}
+    <h1>Liste des bibliothèques</h1>
+{% endif %}
+
+{% if is_granted('ROLE_CLIENT') %}
+    <form action="{{ path('bibliotheque_search') }}" method="get">
+        <input type="text" name="query" placeholder="Rechercher un livre...">
+        <button type="submit">Rechercher</button>
+    </form>
+{% endif %}
+
+    <ul>
+        {% for bibliotheque in bibliotheques %}
+            <li>
+                <a href="{{ path('bibliotheque_show', {'id': bibliotheque.id}) }}">
+                    <img src="{{ bibliotheque.image }}" alt="{{ bibliotheque.name }}" width="100">
+                    {{ bibliotheque.name }}
+                </a>
+                {% if is_granted('ROLE_LIBRARIAN') %}
+                    <a href="{{ path('librarian_edit_bibliotheque', {'id': bibliotheque.id}) }}">Modifier</a>
+                    <a href="{{ path('librarian_delete_bibliotheque', {'id': bibliotheque.id}) }}">Supprimer</a>
+                {% endif %}
+                <ul>
+                    {% for livre in bibliotheque.livres %}
+                        <li>{{ livre.title }} par {{ livre.author }}</li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% else %}
+            <li>Aucune bibliothèque trouvée.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

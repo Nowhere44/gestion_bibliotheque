@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}List of Livres{% endblock %}
+
+{% block body %}
+    <h1>List of Livres</h1>
+
+    <ul>
+    {% for livre in livres %}
+        <li>
+            <strong>{{ livre.title }}</strong> by {{ livre.author }}
+            <br>
+            Published on: {{ livre.publishedDate|date('Y-m-d') }}
+            <br>
+            Description: {{ livre.description }}
+            <br>
+            <img src="{{ livre.image }}" alt="{{ livre.title }}" width="100">
+        </li>
+    {% else %}
+        <li>No livres found.</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

@@ -2,9 +2,11 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\Bibliotheque;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+
 
 /**
  * @extends ServiceEntityRepository<Bibliotheque>
@@ -20,6 +22,29 @@ class BibliothequeRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Bibliotheque::class);
     }
+
+
+
+    public function findAllByUser(User $user): array
+    {
+        return $this->createQueryBuilder('b')
+            ->join('b.bibliothecaires', 'u')
+            ->where('u.id = :userId')
+            ->setParameter('userId', $user->getId())
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findByUser(User $user): ?Bibliotheque
+    {
+        return $this->createQueryBuilder('b')
+            ->join('b.bibliothecaires', 'u')
+            ->where('u.id = :userId')
+            ->setParameter('userId', $user->getId())
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+    
 
 //    /**
 //     * @return Bibliotheque[] Returns an array of Bibliotheque objects
