@@ -36,11 +36,14 @@ security:
   # Note: Only the *first* access control that matches will be used
   access_control:
     - { path: ^/admin, roles: ROLE_ADMIN }
-    # - { path: ^/profile, roles: ROLE_USER }
+    - { path: ^/bibliotheque, roles: IS_AUTHENTICATED_REMEMBERED }
+    - { path: ^/livre, roles: IS_AUTHENTICATED_REMEMBERED }
+    - { path: ^/user, roles: IS_AUTHENTICATED_REMEMBERED }
+    # - { path: ^/bibliotheque, roles: [ROLE_CLIENT, ROLE_LIBRARIAN] }
 
   role_hierarchy:
     ROLE_USER: null
-    ROLE_LIBRARIAN: ROLE_USER
+    ROLE_LIBRARIAN: ROLE_CLIENT
     ROLE_ADMIN: null
 
 when@test:

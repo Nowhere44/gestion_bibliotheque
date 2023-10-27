@@ -18,7 +18,7 @@ class Bibliotheque
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: 'text')]
     private ?string $description = null;
 
     #[ORM\Column(length: 255)]

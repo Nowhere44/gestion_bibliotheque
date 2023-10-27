@@ -5,13 +5,14 @@ namespace App\Controller;
 use App\Entity\Bibliotheque;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\BibliothequeRepository;
 use App\Repository\LivreRepository;
 use App\Form\BibliothequeType;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class BibliothequeController extends AbstractController
 {
@@ -29,7 +30,7 @@ public function search(Request $request, LivreRepository $livreRepository): Resp
     ]);
 }
 
-    #[Route('/bibliotheque', name: 'app_bibliotheque')]
+    #[Route('/', name: 'app_bibliotheque')]
     public function index(): Response
     {
         $response = $this->render('bibliotheque/index.html.twig', [
@@ -41,12 +42,13 @@ $response->headers->set('Expires', '0');
 return $response;
     }
 
+
     #[Route('/bibliotheque/list', name: 'bibliotheque_list')]
     public function list(BibliothequeRepository $bibliothequeRepository): Response
     {
         $user = $this->getUser();
         
-        if ($this->isGranted('ROLE_LIBRARIAN')) {
+        if ($this->isGranted('ROLE_LIBRARIAN') and $this->isGranted('ROLE_CLIENT')) {
             $bibliotheques = $bibliothequeRepository->findAllByUser($user);
         } else {
             $bibliotheques = $bibliothequeRepository->findAll();
