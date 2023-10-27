@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
+
 class BibliothequeController extends AbstractController
 {
 
@@ -31,10 +32,14 @@ public function search(Request $request, LivreRepository $livreRepository): Resp
 }
 
     #[Route('/', name: 'app_bibliotheque')]
-    public function index(): Response
+    public function index(BibliothequeRepository $bibliothequeRepository,LivreRepository $livreRepository): Response
     {
+        $bibliotheques = $bibliothequeRepository->findAll();
+        $livres = $livreRepository->findAll(); 
+        
+
         $response = $this->render('bibliotheque/index.html.twig', [
-            'controller_name' => 'BibliothequeController',
+            'controller_name' => 'BibliothequeController','bibliotheques' => $bibliotheques, 'livres'=> $livres
         ]);
 $response->headers->set('Cache-Control', 'no-cache, no-store, must-revalidate');
 $response->headers->set('Pragma', 'no-cache');
