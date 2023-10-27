@@ -5,6 +5,8 @@
         <title>{% block title %}Welcome!{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
         <link rel="stylesheet" href="{{ asset('build/app.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/tailwind.css') }}">
+        <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
         {% endblock %}
@@ -14,6 +16,40 @@
         {% endblock %}
     </head>
     <body>
+        {% block header %}
+        <header class="absolute inset-x-0 top-0 z-50">
+            <nav class="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
+                {% if not app.user %}
+                <div class="flex lg:flex-1">
+                    <a href="{{ path('user_edit') }}" class="-m-1.5 p-1.5">
+                      <img class="h-16 w-auto" src="https://img.freepik.com/free-vector/covered-opened-book-with-pages-fluttering-hand-drawn-sketch-vector-illustration_460848-14815.jpg?w=996&t=st=1698262114~exp=1698262714~hmac=e2d0606e2e3883656d37e4d49c4fb51322fd8aff9eb618e3eef757c0fb1da3c1" alt="">
+                    </a>
+                  </div>
+                  <div class="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-4">
+                    <a href="{{ path('login') }}"  class="text-sm font-semibold leading-6 text-gray-900">Connexion <span aria-hidden="true">&rarr;</span></a>
+                    <a href="{{ path('app_register') }}" class="text-sm font-semibold leading-6 text-gray-900">Inscription <span aria-hidden="true">&rarr;</span></a>
+                  </div>
+                {% else %}
+
+                <div class="flex lg:flex-1 items-center gap-4">
+                    <a href="{{ path('user_edit') }}" class="-m-1.5 p-1.5">
+                      <img class="h-12 w-auto" src="{{app.user.profileImage}}" alt="">
+                    </a>
+                    <h1 class="truncate text-2xl font-bold text-gray-900">Welcome,{{ app.user.username }} !</h1>
+                  </div>
+                  <div class="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-4 lg:items-center">
+                    <form action="{{ path('bibliotheque_search') }}" method="get" class="flex items-center border overflow-hidden border-blue-500 rounded-lg">
+                      <input type="text" name="query" placeholder="Rechercher un livre..." class="p-2 rounded focus:outline-none">
+                      <button type="submit" class="ml-2 bg-white text-blue-500 p-2 border-l border-blue-500 focus:outline-none">Rechercher</button>
+                  </form>
+            
+                    <a href="{{ path('logout') }}" class="text-sm font-semibold leading-6 text-gray-900 text-blue-600 hover:text-red-500">Deconnexion<span aria-hidden="true">&rarr;</span></a>
+                  </div>
+                {% endif %}
+            </nav>
+        </header>
+
+        {% endblock %}
+
         {% block body %}{% endblock %}
     </body>
-</html>

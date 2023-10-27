@@ -30,11 +30,11 @@ class LibrarianController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'Bibliothèque mise à jour avec succès !');
-            return $this->redirectToRoute('librarian_edit_bibliotheque');
+            return $this->redirectToRoute('bibliotheque_list');
         }
 
         return $this->render('librarian/edit.html.twig', [
-            'form' => $form->createView(),
+            'form' => $form->createView(),'bibliotheque'=>$bibliotheque
         ]);
     }
 

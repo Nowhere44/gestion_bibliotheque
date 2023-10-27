@@ -18,7 +18,7 @@ Encore.enablePostCssLoader((options) => {
   .setPublicPath("/build")
   // only needed for CDN's or subdirectory deploy
   //.setManifestKeyPrefix('build/')
-
+  .enablePostCssLoader()
   /*
    * ENTRY CONFIG
    *

@@ -32,9 +32,13 @@ public function search(Request $request, LivreRepository $livreRepository): Resp
     #[Route('/bibliotheque', name: 'app_bibliotheque')]
     public function index(): Response
     {
-        return $this->render('bibliotheque/index.html.twig', [
+        $response = $this->render('bibliotheque/index.html.twig', [
             'controller_name' => 'BibliothequeController',
         ]);
+$response->headers->set('Cache-Control', 'no-cache, no-store, must-revalidate');
+$response->headers->set('Pragma', 'no-cache');
+$response->headers->set('Expires', '0');
+return $response;
     }
 
     #[Route('/bibliotheque/list', name: 'bibliotheque_list')]
@@ -49,7 +53,7 @@ public function search(Request $request, LivreRepository $livreRepository): Resp
         }
     
         return $this->render('bibliotheque/list.html.twig', [
-            'bibliotheques' => $bibliotheques,
+            'bibliotheques' => $bibliotheques, 'user'=>$user
         ]);
     }
     
@@ -64,6 +68,7 @@ public function new(Request $request, EntityManagerInterface $entityManager): Re
     if ($form->isSubmitted() && $form->isValid()) {
         $entityManager->persist($bibliotheque);
         $entityManager->flush();
+        
 
         return $this->redirectToRoute('bibliotheque_list');
     }

@@ -11,6 +11,9 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: LivreRepository::class)]
 class Livre
 {
+
+    private $quantite = 10; 
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -161,4 +164,24 @@ class Livre
 
         return $this;
     }
+
+public function getQuantite(): ?int
+{
+    return $this->quantite;
+}
+
+public function setQuantite(int $quantite): self
+{
+    $this->quantite = $quantite;
+    return $this;
+}
+
+public function decrementQuantite(): self
+{
+    if ($this->quantite > 0) {
+        $this->quantite--;
+    }
+    return $this;
+}
+
 }

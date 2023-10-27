@@ -1,14 +1,28 @@
-<h1>Résultats de recherche pour "{{ query }}"</h1>
+{% extends 'base.html.twig' %}
 
-<ul>
-    {% for livre in livres %}
-        <li>
-            {{ livre.title }} par {{ livre.author }}
-            {% if livre.bibliotheque %}
-                (Disponible à {{ livre.bibliotheque.name }})
-            {% endif %}
-        </li>
-    {% else %}
-        <li>Aucun livre trouvé.</li>
-    {% endfor %}
-</ul>
+{% block header %}{% endblock %}
+
+{% block body %}
+<div class="container mx-auto px-4 py-6">
+    <h1 class="text-5xl font-light mb-24">Résultats de recherche pour "{{ query }}"</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {% for livre in livres %}
+            <div class="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 ease-in-out transform hover:scale-105">
+                <a href="{{ path('livre_details', {'id': livre.id}) }}"> 
+                <img src="{{ livre.image }}" alt="{{ livre.title }}" class="w-full h-48 object-cover">
+                </a>
+                <div class="p-4">
+                    <h2 class="text-xl font-semibold">{{ livre.title }}</h2>
+                    <p class="text-gray-600">par {{ livre.author }}</p>
+                    {% if livre.bibliotheque %}
+                        <p class="mt-2 text-sm text-gray-500">Disponible à {{ livre.bibliotheque.name }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        {% else %}
+            <p class="text-gray-600">Aucun livre trouvé.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

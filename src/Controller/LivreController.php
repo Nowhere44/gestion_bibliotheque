@@ -78,5 +78,19 @@ public function delete(EntityManagerInterface $entityManager, Livre $livre): Res
     return $this->redirectToRoute('app_livre_list');
 }
 
+#[Route('/livre/{id}', name: 'livre_details')]
+public function bookDetails(int $id, LivreRepository $livreRepository): Response
+{
+    $livre = $livreRepository->find($id);
+
+    if (!$livre) {
+        throw $this->createNotFoundException('The book does not exist');
+    }
+
+    return $this->render('livre/detailsLivre.html.twig', [
+        'livre' => $livre,
+    ]);
+}
+
 
 }

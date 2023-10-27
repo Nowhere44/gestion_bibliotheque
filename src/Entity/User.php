@@ -34,6 +34,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $profileImage = null;
 
+    private ?string $plainPassword = null;
     
     #[ORM\ManyToOne(targetEntity: Bibliotheque::class ,inversedBy: 'bibliothecaires')]
     private ?Bibliotheque $bibliotheque = null;
@@ -124,11 +125,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return null;
     }
 
-    public function eraseCredentials()
-    {
-    
-    }
-
     public function getUserIdentifier(): string
     {
         return $this->username; 
@@ -173,5 +169,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(?string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
+        return $this;
+    }
+
+    // Implement the eraseCredentials method
+    public function eraseCredentials()
+    {
+        // Clear the plainPassword after it's been used
+        $this->plainPassword = null;
     }
 }
